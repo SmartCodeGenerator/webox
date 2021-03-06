@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 // TODO: post loginFormData
-                                
+
                               }
                             },
                             child: Padding(
