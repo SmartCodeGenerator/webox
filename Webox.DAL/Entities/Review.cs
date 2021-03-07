@@ -4,8 +4,8 @@ namespace Webox.DAL.Entities
 {
     public class Review
     {
-        public string ReviewId;
-        public string ReviewText;
+        public string ReviewId { get; set; }
+        public string ReviewText { get; set; }
         public DateTime PublishDateTime { get; set; }
         public float Rating { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Webox.DAL.Database.EntityConfigurations;
 using Webox.DAL.Entities;
 
 namespace Webox.DAL.Database
@@ -22,7 +23,15 @@ namespace Webox.DAL.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.ApplyConfiguration(new UserAccountConfiguration());
+            modelBuilder.ApplyConfiguration(new StorageLotConfiguration());
+            modelBuilder.ApplyConfiguration(new ReviewConfiguration());
+            modelBuilder.ApplyConfiguration(new PreferenceConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderConfiguration());
+            modelBuilder.ApplyConfiguration(new LaptopConfiguration());
+            modelBuilder.ApplyConfiguration(new DelivererConfiguration());
+            modelBuilder.ApplyConfiguration(new ComparisonConfiguration());
         }
     }
 }
