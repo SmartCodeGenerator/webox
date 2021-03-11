@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Webox.DAL.Entities
 {
-    public class UserAccount
+    public class UserAccount : IdentityUser
     {
-        public string AccountId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public bool IsEmployee { get; set; }
         public string ProfileImagePath { get; set; }
 
         public ICollection<Review> Reviews { get; set; }

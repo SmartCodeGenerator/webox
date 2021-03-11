@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webox.API", "Webox\Webox.API.csproj", "{123BB72C-5987-4BB4-982F-80C67880090F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webox.DAL", "Webox.DAL\Webox.DAL.csproj", "{1FB58BF7-4D7D-4342-898C-7F032396871B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webox.DAL", "Webox.DAL\Webox.DAL.csproj", "{1FB58BF7-4D7D-4342-898C-7F032396871B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webox.BLL", "Webox.BLL\Webox.BLL.csproj", "{AD319DDC-DBF1-4692-924C-D9DDF9A257B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1FB58BF7-4D7D-4342-898C-7F032396871B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FB58BF7-4D7D-4342-898C-7F032396871B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FB58BF7-4D7D-4342-898C-7F032396871B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD319DDC-DBF1-4692-924C-D9DDF9A257B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD319DDC-DBF1-4692-924C-D9DDF9A257B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD319DDC-DBF1-4692-924C-D9DDF9A257B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD319DDC-DBF1-4692-924C-D9DDF9A257B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

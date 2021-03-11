@@ -10,10 +10,7 @@ namespace Webox.DAL.Database.EntityConfigurations
         {
             builder.Property(ua => ua.FirstName).IsRequired();
             builder.Property(ua => ua.LastName).IsRequired();
-            builder.Property(ua => ua.Email).IsRequired();
-            builder.HasIndex(ua => ua.Email).IsUnique();
-            builder.Property(ua => ua.Password).IsRequired();
-            builder.Property(ua => ua.IsEmployee).IsRequired();
+            builder.Property(ua => ua.ProfileImagePath).HasDefaultValue("https://firebasestorage.googleapis.com/v0/b/webox-63a97.appspot.com/o/profiles%2Fdefault_profile_img.png?alt=media&token=63549611-0fed-40b6-abde-603778cc63f0");
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Webox.DAL.Database.EntityConfigurations;
 using Webox.DAL.Entities;
 
 namespace Webox.DAL.Database
 {
-    public class ApplicationDataContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<UserAccount>
     {
-        public DbSet<UserAccount> Accounts { get; set; }
         public DbSet<StorageLot> StorageLots { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Preference> Preferences { get; set; }
@@ -16,13 +16,15 @@ namespace Webox.DAL.Database
         public DbSet<Deliverer> Deliverers { get; set; }
         public DbSet<Comparison> Comparisons { get; set; }
 
-        public ApplicationDataContext(DbContextOptions<ApplicationDataContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new UserAccountConfiguration());
             modelBuilder.ApplyConfiguration(new StorageLotConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewConfiguration());

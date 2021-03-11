@@ -268,9 +268,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               });
                             },
                             validator: (value) {
-                              return value.isEmpty
-                                  ? 'Поле не повинно бути порожнім'
-                                  : null;
+                              if (value == null || value.isEmpty) {
+                                return 'Поле не повинно бути порожнім';
+                              } else if (value.trim().length < 6) {
+                                return 'Пароль повинний бути довжиною не менше 6 символів';
+                              } else {
+                                return null;
+                              }
                             },
                           ),
                           TextFormField(

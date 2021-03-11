@@ -22,6 +22,7 @@ namespace Webox.DAL.Database.EntityConfigurations
             builder.Property(l => l.Rating).IsRequired();
             builder.Property(l => l.IsAvailable).IsRequired();
             builder.Property(l => l.ModelImagePath).IsRequired();
+            builder.Property(l => l.ModelImagePath).HasDefaultValue("https://firebasestorage.googleapis.com/v0/b/webox-63a97.appspot.com/o/laptops%2Fdefault_laptop_img.png?alt=media&token=74eea36a-2376-4e55-824f-f67a5a4aa753");
         }
     }
 }
