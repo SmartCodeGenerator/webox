@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Client\Mobile\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Webox.BLL\Webox.BLL.csproj" />
     <ProjectReference Include="..\Webox.DAL\Webox.DAL.csproj" />
   </ItemGroup>
