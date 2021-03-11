@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:webox/blocs/account_bloc.dart';
+import 'package:webox/models/login_model.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -9,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final model = LoginModel();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? null
                                   : 'Неправильний формат електронної пошти';
                             },
+                            onChanged: (value) {
+                              model.email = value.trim();
+                            },
                           ),
                           TextFormField(
                             keyboardType: TextInputType.visiblePassword,
@@ -57,21 +63,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (password) {
                               if (password == null || password.isEmpty) {
                                 return 'Поле не повинно бути порожнім';
-                              } else if (password.trim().length < 6) {
+                              } else if (password.length < 6) {
                                 return 'Пароль повинний бути довжиною не менше 6 символів';
                               } else {
                                 return null;
                               }
+                            },
+                            onChanged: (value) {
+                              model.password = value;
                             },
                           ),
                           SizedBox(
                             height: 15.0,
                           ),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                // TODO: post loginFormData
-
+                                try {
+                                  await accountBloc.login(model);
+                                  Navigator.pushNamed(context, '/');
+                                } catch (ex) {
+                                  // TODO: show AlertDialog
+                                  print(ex);
+                                }
                               }
                             },
                             child: Padding(

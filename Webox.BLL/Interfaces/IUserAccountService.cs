@@ -5,7 +5,9 @@ namespace Webox.BLL.Interfaces
 {
     public interface IUserAccountService
     {
-        Task<object> Login(LoginDTO data);
+        Task<string> Login(LoginDTO data);
+        Task<string> Register(RegisterDTO data);
+        Task<AccountInformationDTO> GetUserAccountInformation(string userName);
         void Dispose();
     }
 }

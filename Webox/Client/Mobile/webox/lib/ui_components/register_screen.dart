@@ -270,7 +270,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Поле не повинно бути порожнім';
-                              } else if (value.trim().length < 6) {
+                              } else if (value.length < 6) {
                                 return 'Пароль повинний бути довжиною не менше 6 символів';
                               } else {
                                 return null;
