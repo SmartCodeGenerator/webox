@@ -1,7 +1,10 @@
-﻿namespace Webox.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Webox.DAL.Entities
 {
     public class OrderItem
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string OrderItemId { get; set; }
         public int Amount { get; set; }
 

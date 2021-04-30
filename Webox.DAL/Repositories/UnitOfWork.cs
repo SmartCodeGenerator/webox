@@ -12,6 +12,7 @@ namespace Webox.DAL.Repositories
         private readonly ApplicationDbContext context;
         private DelivererRepository delivererRepository;
         private StorageLotRepository storageLotRepository;
+        private LaptopRepository laptopRepository;
         private bool disposed = false;
 
         public UnitOfWork(DbContextOptions<ApplicationDbContext> options)
@@ -40,6 +41,18 @@ namespace Webox.DAL.Repositories
                     delivererRepository = new DelivererRepository(context);
                 }
                 return delivererRepository;
+            }
+        }
+
+        public IRepository<Laptop> Laptops
+        {
+            get
+            {
+                if (laptopRepository == null)
+                {
+                    laptopRepository = new LaptopRepository(context);
+                }
+                return laptopRepository;
             }
         }
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webox.DAL.Entities
 {
     public class Review
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string ReviewId { get; set; }
         public string ReviewText { get; set; }
         public DateTime PublishDateTime { get; set; }

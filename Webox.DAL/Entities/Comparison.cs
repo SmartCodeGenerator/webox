@@ -1,7 +1,10 @@
-﻿namespace Webox.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Webox.DAL.Entities
 {
     public class Comparison
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string ComparisonId { get; set; }
         public bool IsOptimal { get; set; }
 

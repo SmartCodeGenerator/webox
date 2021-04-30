@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webox.DAL.Entities
 {
     public class Laptop
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string LaptopId { get; set; }
         public string ModelName { get; set; }
         public string Manufacturer { get; set; }

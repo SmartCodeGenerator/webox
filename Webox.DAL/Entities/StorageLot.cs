@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webox.DAL.Entities
 {
     public class StorageLot
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string StorageLotId { get; set; }
         public string WarehouseAddress { get; set; }
         public DateTime SupplyDateTime { get; set; }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Webox.DAL.Entities
 {
     public class Order
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string OrderId { get; set; }
         public string DeliveryAddress { get; set; }
         public DateTime DeliveryDateTime { get; set; }

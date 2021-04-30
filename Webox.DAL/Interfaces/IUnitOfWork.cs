@@ -8,6 +8,7 @@ namespace Webox.DAL.Interfaces
     {
         IRepository<StorageLot> StorageLots { get; }
         IRepository<Deliverer> Deliverers { get; }
+        IRepository<Laptop> Laptops { get; }
         Task SaveChangesAsync();
     }
 }
