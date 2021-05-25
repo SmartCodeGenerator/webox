@@ -51,6 +51,19 @@ namespace Webox.BLL.Services
         public async Task<LaptopWithIdDTO> GetById(string id)
         {
             var laptop = await unitOfWork.Laptops.GetById(id);
+            var reviews = new List<ReviewInfoDTO>();
+            foreach (var review in laptop.Reviews)
+            {
+                reviews.Add(new ReviewInfoDTO 
+                { 
+                    Id = review.ReviewId, 
+                    PubDateTime = review.PublishDateTime,
+                    Rating = review.Rating,
+                    Text = review.ReviewText,
+                    UserName = await unitOfWork.UserAccount.GetFullName(review.AccountId),
+                    LaptopId = review.LaptopId
+                });
+            }
 
             return laptop != null ? new LaptopWithIdDTO
             {
@@ -67,7 +80,8 @@ namespace Webox.BLL.Services
                 Price = laptop.Price,
                 Rating = laptop.Rating,
                 IsAvailable = laptop.IsAvailable,
-                ModelImagePath = laptop.ModelImagePath
+                ModelImagePath = laptop.ModelImagePath,
+                Reviews = reviews.ToArray(),
             } : null;
         }
 

@@ -13,6 +13,8 @@ namespace Webox.DAL.Repositories
         private DelivererRepository delivererRepository;
         private StorageLotRepository storageLotRepository;
         private LaptopRepository laptopRepository;
+        private ReviewRepository reviewRepository;
+        private UserAccountRepository userAccount;
         private bool disposed = false;
 
         public UnitOfWork(DbContextOptions<ApplicationDbContext> options)
@@ -53,6 +55,30 @@ namespace Webox.DAL.Repositories
                     laptopRepository = new LaptopRepository(context);
                 }
                 return laptopRepository;
+            }
+        }
+
+        public IRepository<Review> Reviews
+        {
+            get
+            {
+                if (reviewRepository == null)
+                {
+                    reviewRepository = new ReviewRepository(context);
+                }
+                return reviewRepository;
+            }
+        }
+
+        public UserAccountRepository UserAccount
+        {
+            get
+            {
+                if (userAccount == null)
+                {
+                    userAccount = new UserAccountRepository(context);
+                }
+                return userAccount;
             }
         }
 

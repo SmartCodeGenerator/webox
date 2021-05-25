@@ -60,8 +60,15 @@ namespace Webox.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetLaptopById(string id)
         {
-            var laptop = await laptopService.GetById(id);
-            return laptop != null ? Ok(laptop) : NotFound();
+            try
+            {
+                var laptop = await laptopService.GetById(id);
+                return laptop != null ? Ok(laptop) : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize]
@@ -75,7 +82,7 @@ namespace Webox.API.Controllers
                 "price_desc" => SortOrder.SortByPriceDescending,
                 _ => SortOrder.SortByRatingDescending,
             };
-
+            
             try
             {
                 var data = await laptopService.Index(sortOrderEnumValue, queryParams, pageIndex ?? 1);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,20 +9,20 @@ using Webox.DAL.Interfaces;
 
 namespace Webox.DAL.Repositories
 {
-    public class LaptopRepository : IRepository<Laptop>
+    public class ReviewRepository : IRepository<Review>
     {
-        private readonly DbSet<Laptop> laptops;
+        private readonly DbSet<Review> reviews;
 
-        public LaptopRepository(ApplicationDbContext context)
+        public ReviewRepository(ApplicationDbContext dbContext)
         {
-            laptops = context.Laptops;
+            reviews = dbContext.Reviews;
         }
 
-        public async Task Add(Laptop entity)
+        public async Task Add(Review entity)
         {
             await Task.Run(() =>
             {
-                laptops.Add(entity);
+                reviews.Add(entity);
             });
         }
 
@@ -29,35 +30,35 @@ namespace Webox.DAL.Repositories
         {
             await Task.Run(() =>
             {
-                var entity = laptops.Find(id);
+                var entity = reviews.Find(id);
                 if (entity != null)
                 {
-                    laptops.Remove(entity);
+                    reviews.Remove(entity);
                 }
             });
         }
 
-        public async Task<List<Laptop>> GetAll()
+        public async Task<List<Review>> GetAll()
         {
             return await Task.Run(() =>
             {
-                return laptops.ToList();
+                return reviews.OrderByDescending(r => r.PublishDateTime).ToList();
             });
         }
 
-        public async Task<Laptop> GetById(string id)
+        public async Task<Review> GetById(string id)
         {
             return await Task.Run(() =>
             {
-                return laptops.Include(l => l.Reviews).ToList().First(l => l.LaptopId.Equals(id));
+                return reviews.Find(id);
             });
         }
 
-        public async Task Update(Laptop entity)
+        public async Task Update(Review entity)
         {
-            await Task.Run(() =>
+            await Task.Run(() => 
             {
-                laptops.Update(entity);
+                reviews.Update(entity);
             });
         }
     }

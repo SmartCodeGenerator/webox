@@ -63,6 +63,7 @@ namespace Webox
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserAccountService, UserAccountService>();
             services.AddScoped<ILaptopService, LaptopService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
