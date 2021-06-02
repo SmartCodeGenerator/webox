@@ -8,8 +8,6 @@ namespace Webox.DAL.Database.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Comparison> builder)
         {
-            builder.Property(c => c.IsOptimal).IsRequired();
-
             builder.HasOne(c => c.Account).WithMany(ua => ua.Comparisons).HasForeignKey(c => c.AccountId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(c => c.Laptop).WithMany(l => l.Comparisons).HasForeignKey(c => c.LaptopId).OnDelete(DeleteBehavior.Cascade);
         }

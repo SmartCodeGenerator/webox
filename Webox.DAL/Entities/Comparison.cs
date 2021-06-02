@@ -6,7 +6,6 @@ namespace Webox.DAL.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string ComparisonId { get; set; }
-        public bool IsOptimal { get; set; }
 
         public string AccountId { get; set; }
         public UserAccount Account { get; set; }

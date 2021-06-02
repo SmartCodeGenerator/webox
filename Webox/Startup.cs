@@ -64,6 +64,11 @@ namespace Webox
             services.AddScoped<IUserAccountService, UserAccountService>();
             services.AddScoped<ILaptopService, LaptopService>();
             services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IDelivererService, DelivererService>();
+            services.AddScoped<IStorageLotService, StorageLotService>();
+            services.AddScoped<IComparisonService, ComparisonService>();
+            services.AddScoped<IPreferenceService, PreferenceService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

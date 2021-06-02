@@ -33,5 +33,65 @@ namespace Webox.DAL.Repositories
                 return userAccount.Reviews.OrderByDescending(r => r.PublishDateTime).ToList();
             });
         }
+
+        public async Task<Dictionary<string, Laptop>> GetComparisonLaptops(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var userAccount = users.Include(u => u.Comparisons).ThenInclude(c => c.Laptop).First(u => u.Id.Equals(userId));
+                var comparisonLaptops = new Dictionary<string, Laptop>();
+                foreach (var comparison in userAccount.Comparisons)
+                {
+                    comparisonLaptops.Add(comparison.ComparisonId, comparison.Laptop);
+                }
+                return comparisonLaptops;
+            });
+        }
+
+        public async Task<bool> CheckLaptopComparisonPresence(string userId, string laptopId)
+        {
+            return await Task.Run(() =>
+            {
+                var userAccount = users.Include(u => u.Comparisons).First(u => u.Id.Equals(userId));
+                return userAccount.Comparisons.Any(c => c.LaptopId.Equals(laptopId));
+            });
+        }
+
+        public async Task<Dictionary<string, Laptop>> GetPreferenceLaptops(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var userAccount = users.Include(u => u.Preferences).ThenInclude(p => p.Laptop).First(u => u.Id.Equals(userId));
+                var preferenceLaptops = new Dictionary<string, Laptop>();
+                foreach (var preference in userAccount.Preferences)
+                {
+                    preferenceLaptops.Add(preference.PreferenceId, preference.Laptop);
+                }
+                return preferenceLaptops;
+            });
+        }
+
+        public async Task<bool> CheckLaptopPreferencePresence(string userId, string laptopId)
+        {
+            return await Task.Run(() =>
+            {
+                var userAccount = users.Include(u => u.Preferences).First(u => u.Id.Equals(userId));
+                return userAccount.Preferences.Any(p => p.LaptopId.Equals(laptopId));
+            });
+        }
+
+        public async Task<Dictionary<string, List<OrderItem>>> GetUserOrders(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var userAccount = users.Include(u => u.Orders).ThenInclude(o => o.OrderItems).First(u => u.Id.Equals(userId));
+                var data = new Dictionary<string, List<OrderItem>>();
+                foreach (var order in userAccount.Orders)
+                {
+                    data.Add(order.OrderId, order.OrderItems.ToList());
+                }
+                return data;
+            });
+        }
     }
 }

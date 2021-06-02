@@ -12,6 +12,10 @@ namespace Webox.DAL.Interfaces
         IRepository<Laptop> Laptops { get; }
         UserAccountRepository UserAccount { get; }
         IRepository<Review> Reviews { get; }
+        IRepository<Comparison> Comparisons { get; }
+        IRepository<Preference> Preferences { get; }
+        IRepository<Order> Orders { get; }
+        IRepository<OrderItem> OrderItems { get; }
         Task SaveChangesAsync();
     }
 }

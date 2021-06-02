@@ -15,6 +15,10 @@ namespace Webox.DAL.Repositories
         private LaptopRepository laptopRepository;
         private ReviewRepository reviewRepository;
         private UserAccountRepository userAccount;
+        private ComparisonRepository comparisonRepository;
+        private PreferenceRepository preferenceRepository;
+        private OrderRepository orderRepository;
+        private OrderItemRepository orderItemRepository;
         private bool disposed = false;
 
         public UnitOfWork(DbContextOptions<ApplicationDbContext> options)
@@ -79,6 +83,54 @@ namespace Webox.DAL.Repositories
                     userAccount = new UserAccountRepository(context);
                 }
                 return userAccount;
+            }
+        }
+
+        public IRepository<Comparison> Comparisons
+        {
+            get
+            {
+                if (comparisonRepository == null)
+                {
+                    comparisonRepository = new ComparisonRepository(context);
+                }
+                return comparisonRepository;
+            }
+        }
+
+        public IRepository<Preference> Preferences
+        {
+            get
+            {
+                if (preferenceRepository == null)
+                {
+                    preferenceRepository = new PreferenceRepository(context);
+                }
+                return preferenceRepository;
+            }
+        }
+
+        public IRepository<Order> Orders
+        {
+            get
+            {
+                if (orderRepository == null)
+                {
+                    orderRepository = new OrderRepository(context);
+                }
+                return orderRepository;
+            }
+        }
+
+        public IRepository<OrderItem> OrderItems
+        {
+            get
+            {
+                if (orderItemRepository == null)
+                {
+                    orderItemRepository = new OrderItemRepository(context);
+                }
+                return orderItemRepository;
             }
         }
 
