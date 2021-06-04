@@ -11,7 +11,7 @@ namespace Webox.BLL.Infrastructure
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("Розробник О.В.Митринюк", "webox.diploma@gmail.com"));
-            emailMessage.To.Add(new MailboxAddress("Шановний Користувачу!", email));
+            emailMessage.To.Add(new MailboxAddress(email, email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {

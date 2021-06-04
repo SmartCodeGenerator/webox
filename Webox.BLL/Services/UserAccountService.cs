@@ -169,15 +169,16 @@ namespace Webox.BLL.Services
             return passwordBuilder.ToString();
         }
 
-        public async Task RestoreUserPassword(string userName, string email)
+        public async Task RestoreUserPassword(string email)
         {
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await userManager.FindByNameAsync(email);
 
             if (user != null)
             {
                 var newPassword = GenerateUserPassword();
-                var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                await userManager.ResetPasswordAsync(user, token, newPassword);
+                var newPasswordHash = userManager.PasswordHasher.HashPassword(user, newPassword);
+                user.PasswordHash = newPasswordHash;
+                await userManager.UpdateAsync(user);
                 await EmailService.SendEmailAsync(email, "Відновлення забутого пароля", $"Ваш новий пароль - <b>{newPassword}</b>.\nРекомендуємо одразу змінити його на бажаний для Вас пароль в особистому кабінеті.");
             }
         }
@@ -203,8 +204,9 @@ namespace Webox.BLL.Services
             {
                 if (data.ConfirmNewPassword.Equals(data.NewPassword))
                 {
-                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                    await userManager.ResetPasswordAsync(user, token, data.NewPassword);
+                    var newPasswordHash = userManager.PasswordHasher.HashPassword(user, data.NewPassword);
+                    user.PasswordHash = newPasswordHash;
+                    await userManager.UpdateAsync(user);
                 }
             }
         }

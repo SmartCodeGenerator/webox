@@ -131,13 +131,12 @@ namespace Webox.API.Controllers
             return Conflict(ModelState);
         }
 
-        [Authorize]
-        [HttpPut("password/restore")]
+        [HttpPost("password/restore")]
         public async Task<IActionResult> RestorePassword([FromBody] string email)
         {
             try
             {
-                await service.RestoreUserPassword(User.Identity.Name, email);
+                await service.RestoreUserPassword(email);
                 return Ok();
             }
             catch (Exception ex)
