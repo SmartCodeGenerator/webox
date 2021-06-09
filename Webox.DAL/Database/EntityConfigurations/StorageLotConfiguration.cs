@@ -14,7 +14,7 @@ namespace Webox.DAL.Database.EntityConfigurations
             builder.Property(sl => sl.LaptopsCostPerUnit).IsRequired();
 
             builder.HasOne(sl => sl.Laptop).WithMany(l => l.StorageLots).HasForeignKey(sl => sl.LaptopId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(sl => sl.Deliverer).WithMany(d => d.StorageLots).HasForeignKey(sl => sl.DelivererId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(sl => sl.Deliverer).WithMany(d => d.StorageLots).HasForeignKey(sl => sl.DelivererId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Webox.BLL.DTO
         public float LaptopsCostPerUnit { get; set; }
         [Required]
         public string LaptopId { get; set; }
-        [Required]
         public string DelivererId { get; set; }
     }
 }

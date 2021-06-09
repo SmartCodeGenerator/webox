@@ -16,6 +16,8 @@ namespace Webox.BLL.Services
     {
         private readonly IRepository<Order> orderRepository;
         private readonly IRepository<OrderItem> orderItemRepository;
+        private readonly IRepository<StorageLot> storageLotRepository;
+        private readonly IRepository<Laptop> laptopRepository;
         private readonly UserAccountRepository userAccountRepository;
         private readonly UserManager<UserAccount> userManager;
         private readonly SaveChangesAsync saveChangesAsync;
@@ -24,9 +26,18 @@ namespace Webox.BLL.Services
         {
             orderRepository = unitOfWork.Orders;
             orderItemRepository = unitOfWork.OrderItems;
+            storageLotRepository = unitOfWork.StorageLots;
+            laptopRepository = unitOfWork.Laptops;
             userAccountRepository = unitOfWork.UserAccount;
             this.userManager = userManager;
             saveChangesAsync = unitOfWork.SaveChangesAsync;
+        }
+
+        private async Task<int> GetLaptopStorageAmount(string laptopId)
+        {
+            return (await storageLotRepository.GetAll())
+                .Where(sl => sl.LaptopId.Equals(laptopId))
+                .Sum(sl => sl.LaptopsAmount);
         }
 
         public async Task MakeOrder(string userName, OrderDTO data)
@@ -34,36 +45,117 @@ namespace Webox.BLL.Services
             var user = await userManager.FindByNameAsync(userName);
             if (user != null)
             {
-                var entity = new Order
-                {
-                    DeliveryAddress = data.DeliveryAddress,
-                    DeliveryDateTime = DateTime.UtcNow.AddDays(3),
-                    PlacementDateTime = DateTime.UtcNow,
-                    Price = data.Price,
-                    AccountId = user.Id
-                };
-
-                await orderRepository.Add(entity);
-                await saveChangesAsync();
-
+                bool failure = false;
                 foreach (var orderItem in data.OrderItems)
                 {
-                    var childEntity = new OrderItem
+                    var laptopStorageAmount = await GetLaptopStorageAmount(orderItem.LaptopId);
+                    if (orderItem.Amount > laptopStorageAmount)
                     {
-                        Amount = orderItem.Amount,
-                        Order = entity,
-                        LaptopId = orderItem.LaptopId
-                    };
-                    await orderItemRepository.Add(childEntity);
+                        failure = true;
+                        break;
+                    }
                 }
-                await saveChangesAsync();
+                
+                if (failure)
+                {
+                    throw new Exception("Перебільшення ліміту на покупку");
+                }
+                else
+                {
+                    var entity = new Order
+                    {
+                        DeliveryAddress = data.DeliveryAddress,
+                        DeliveryDateTime = DateTime.UtcNow.AddDays(3),
+                        PlacementDateTime = DateTime.UtcNow,
+                        Price = data.Price,
+                        AccountId = user.Id
+                    };
+
+                    await orderRepository.Add(entity);
+                    await saveChangesAsync();
+
+                    foreach (var orderItem in data.OrderItems)
+                    {
+                        var childEntity = new OrderItem
+                        {
+                            Amount = orderItem.Amount,
+                            Order = entity,
+                            LaptopId = orderItem.LaptopId
+                        };
+                        await orderItemRepository.Add(childEntity);
+                    }
+                    await saveChangesAsync();
+
+                    foreach (var orderItem in data.OrderItems)
+                    {
+                        var purchaseAmount = orderItem.Amount;
+                        var storageLots = (await storageLotRepository.GetAll()).Where(sl => sl.LaptopId.Equals(orderItem.LaptopId));
+                        foreach (var lot in storageLots)
+                        {
+                            if (lot.LaptopsAmount >= purchaseAmount)
+                            {
+                                lot.LaptopsAmount -= purchaseAmount;
+                                await storageLotRepository.Update(lot);
+                                await saveChangesAsync();
+                                var amount = await GetLaptopStorageAmount(lot.LaptopId);
+                                var laptop = await laptopRepository.GetById(lot.LaptopId);
+                                if (laptop != null)
+                                {
+                                    laptop.IsAvailable = amount > 0;
+                                    await laptopRepository.Update(laptop);
+                                    await saveChangesAsync();
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                purchaseAmount -= lot.LaptopsAmount;
+                                lot.LaptopsAmount = 0;
+                                await storageLotRepository.Update(lot);
+                                await saveChangesAsync();
+                                var amount = await GetLaptopStorageAmount(lot.LaptopId);
+                                var laptop = await laptopRepository.GetById(lot.LaptopId);
+                                if (laptop != null)
+                                {
+                                    laptop.IsAvailable = amount > 0;
+                                    await laptopRepository.Update(laptop);
+                                    await saveChangesAsync();
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
         public async Task CancelOrder(string id)
         {
-            await orderRepository.Delete(id);
-            await saveChangesAsync();
+            var random = new Random();
+            var order = await GetOrder(id);
+            
+            if (order != null)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var storageLots = (await storageLotRepository.GetAll()).Where(sl => sl.LaptopId.Equals(orderItem.LaptopId)).ToList();
+                    var lot = storageLots[random.Next(storageLots.Count)];
+                    lot.LaptopsAmount += orderItem.Amount;
+                    await storageLotRepository.Update(lot);
+                    await saveChangesAsync();
+
+                    var amount = await GetLaptopStorageAmount(lot.LaptopId);
+                    var laptop = await laptopRepository.GetById(lot.LaptopId);
+                    if (laptop != null)
+                    {
+                        laptop.IsAvailable = amount > 0;
+                        await laptopRepository.Update(laptop);
+                        await saveChangesAsync();
+                    }
+                }
+
+                await orderRepository.Delete(id);
+                await saveChangesAsync();
+            }
         }
 
         public async Task<List<OrderInfoDTO>> GetOrders(string userName)
@@ -86,6 +178,7 @@ namespace Webox.BLL.Services
                         AccountId = entry.AccountId
                     };
                     int counter = 0;
+                    order.OrderItems = new OrderItemDTO[pair.Value.Count];
                     foreach (var item in pair.Value)
                     {
                         order.OrderItems[counter++] = new OrderItemDTO
@@ -116,7 +209,8 @@ namespace Webox.BLL.Services
                     AccountId = data.AccountId
                 };
                 int counter = 0;
-                var items = (await orderItemRepository.GetAll()).Where(oi => oi.OrderId.Equals(id));
+                var items = (await orderItemRepository.GetAll()).Where(oi => oi.OrderId.Equals(id)).ToList();
+                order.OrderItems = new OrderItemDTO[items.Count];
                 foreach (var item in items)
                 {
                     order.OrderItems[counter++] = new OrderItemDTO

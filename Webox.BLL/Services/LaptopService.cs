@@ -51,38 +51,58 @@ namespace Webox.BLL.Services
         public async Task<LaptopWithIdDTO> GetById(string id)
         {
             var laptop = await unitOfWork.Laptops.GetById(id);
-            var reviews = new List<ReviewInfoDTO>();
-            foreach (var review in laptop.Reviews)
+            if (laptop != null)
             {
-                reviews.Add(new ReviewInfoDTO 
-                { 
-                    Id = review.ReviewId, 
-                    PubDateTime = review.PublishDateTime,
-                    Rating = review.Rating,
-                    Text = review.ReviewText,
-                    UserName = await unitOfWork.UserAccount.GetFullName(review.AccountId),
-                    LaptopId = review.LaptopId
-                });
-            }
+                var reviews = new List<ReviewInfoDTO>();
+                foreach (var review in laptop.Reviews)
+                {
+                    reviews.Add(new ReviewInfoDTO
+                    {
+                        Id = review.ReviewId,
+                        PubDateTime = review.PublishDateTime,
+                        Rating = review.Rating,
+                        Text = review.ReviewText,
+                        UserName = await unitOfWork.UserAccount.GetFullName(review.AccountId),
+                        LaptopId = review.LaptopId
+                    });
+                }
 
-            return laptop != null ? new LaptopWithIdDTO
-            {
-                Id = laptop.LaptopId,
-                ModelName = laptop.ModelName,
-                Manufacturer = laptop.Manufacturer,
-                Processor = laptop.Processor,
-                Graphic = laptop.GraphicsCard,
-                Ram = laptop.RAMCapacity,
-                Ssd = laptop.SSDCapacity,
-                Screen = laptop.ScreenSize,
-                Os = laptop.OS,
-                Weight = laptop.Weight,
-                Price = laptop.Price,
-                Rating = laptop.Rating,
-                IsAvailable = laptop.IsAvailable,
-                ModelImagePath = laptop.ModelImagePath,
-                Reviews = reviews.ToArray(),
-            } : null;
+                var storageLots = new List<StorageLotInfoDTO>();
+                foreach (var storageLot in laptop.StorageLots)
+                {
+                    storageLots.Add(new StorageLotInfoDTO
+                    {
+                        StorageLotId = storageLot.StorageLotId,
+                        WarehouseAddress = storageLot.WarehouseAddress,
+                        SupplyDateTime = storageLot.SupplyDateTime,
+                        LaptopsAmount = storageLot.LaptopsAmount,
+                        LaptopsCostPerUnit = storageLot.LaptopsCostPerUnit,
+                        LaptopId = storageLot.LaptopId,
+                        DelivererId = storageLot.DelivererId
+                    });
+                }
+
+                return new LaptopWithIdDTO
+                {
+                    Id = laptop.LaptopId,
+                    ModelName = laptop.ModelName,
+                    Manufacturer = laptop.Manufacturer,
+                    Processor = laptop.Processor,
+                    Graphic = laptop.GraphicsCard,
+                    Ram = laptop.RAMCapacity,
+                    Ssd = laptop.SSDCapacity,
+                    Screen = laptop.ScreenSize,
+                    Os = laptop.OS,
+                    Weight = laptop.Weight,
+                    Price = laptop.Price,
+                    Rating = laptop.Rating,
+                    IsAvailable = laptop.IsAvailable,
+                    ModelImagePath = laptop.ModelImagePath,
+                    Reviews = reviews.ToArray(),
+                    StorageLots = storageLots.ToArray()
+                };
+            }
+            return null;
         }
 
         public async Task<PaginatedList<LaptopWithIdDTO>> Index(SortOrder sortOrder, LaptopParams queryParams, int pageIndex)

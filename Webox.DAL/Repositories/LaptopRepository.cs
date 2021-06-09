@@ -49,7 +49,7 @@ namespace Webox.DAL.Repositories
         {
             return await Task.Run(() =>
             {
-                return laptops.Include(l => l.Reviews).ToList().First(l => l.LaptopId.Equals(id));
+                return laptops.Include(l => l.Reviews).Include(l => l.StorageLots).ToList().First(l => l.LaptopId.Equals(id));
             });
         }
 
