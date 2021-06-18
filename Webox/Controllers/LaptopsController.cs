@@ -121,5 +121,173 @@ namespace Webox.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("names")]
+        public async Task<IActionResult> GetLaptopNames([FromQuery] string name)
+        {
+            try
+            {
+                return Ok(await laptopService.GetModelNameList(name ?? ""));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("manufacturers")]
+        public async Task<IActionResult> GetManufacturers()
+        {
+            try
+            {
+                return Ok(await laptopService.GetManufacturers());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("processors")]
+        public async Task<IActionResult> GetProcessors()
+        {
+            try
+            {
+                return Ok(await laptopService.GetProcessors());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("graphics")]
+        public async Task<IActionResult> GetGraphics()
+        {
+            try
+            {
+                return Ok(await laptopService.GetGraphics());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("ram")]
+        public async Task<IActionResult> GetRAM()
+        {
+            try
+            {
+                return Ok(await laptopService.GetRAM());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("ssd")]
+        public async Task<IActionResult> GetSSD()
+        {
+            try
+            {
+                return Ok(await laptopService.GetSSD());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("screens")]
+        public async Task<IActionResult> GetScreens()
+        {
+            try
+            {
+                return Ok(await laptopService.GetScreens());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("OS")]
+        public async Task<IActionResult> GetOS()
+        {
+            try
+            {
+                return Ok(await laptopService.GetOS());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("min-weight")]
+        public async Task<IActionResult> GetMinWeight()
+        {
+            try
+            {
+                return Ok(await laptopService.GetMinWeight());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("max-weight")]
+        public async Task<IActionResult> GetMaxWeight()
+        {
+            try
+            {
+                return Ok(await laptopService.GetMaxWeight());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("min-price")]
+        public async Task<IActionResult> GetMinPrice()
+        {
+            try
+            {
+                return Ok(await laptopService.GetMinPrice());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("max-price")]
+        public async Task<IActionResult> GetMaxPrice()
+        {
+            try
+            {
+                return Ok(await laptopService.GetMaxPrice());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

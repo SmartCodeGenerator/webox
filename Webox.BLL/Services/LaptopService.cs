@@ -124,35 +124,139 @@ namespace Webox.BLL.Services
 
             if (!string.IsNullOrEmpty(queryParams.ModelName))
             {
-                laptops = laptops.Where(l => l.ModelName.ToLower().Contains(queryParams.ModelName.Trim().ToLower())).ToList();
+                var filteredLaptops = new List<Laptop>();
+                var nameCriterion = queryParams.ModelName.ToLower();
+                var criteria = nameCriterion.Split(' ');
+                var cleanCriteria = new List<string>();
+                foreach (var criterion in criteria)
+                {
+                    if (!string.IsNullOrEmpty(criterion))
+                    {
+                        cleanCriteria.Add(criterion);
+                    }
+                }
+                int counter;
+                foreach (var laptop in laptops)
+                {
+                    counter = 0;
+                    foreach (var criterion in cleanCriteria)
+                    {
+                        if (laptop.ModelName.ToLower().Contains(criterion))
+                        {
+                            counter++;
+                        }
+                    }
+                    if (counter == cleanCriteria.Count)
+                    {
+                        filteredLaptops.Add(laptop);
+                    }
+                }
+                laptops = filteredLaptops;
             }
-            if (!string.IsNullOrEmpty(queryParams.Manufacturer))
+            if (queryParams.Manufacturer != null)
             {
-                laptops = laptops.Where(l => l.Manufacturer.ToLower().Equals(queryParams.Manufacturer.Trim().ToLower())).ToList();
+                var col = new List<Laptop>();
+                foreach (var manufacturer in queryParams.Manufacturer)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.Manufacturer.ToLower().Equals(manufacturer.Trim().ToLower()))
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (!string.IsNullOrEmpty(queryParams.Processor))
+            if (queryParams.Processor != null)
             {
-                laptops = laptops.Where(l => l.Processor.ToLower().StartsWith(queryParams.Processor.Trim().ToLower())).ToList();
+                var col = new List<Laptop>();
+                foreach (var processor in queryParams.Processor)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.Processor.ToLower().Equals(processor.Trim().ToLower()))
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (!string.IsNullOrEmpty(queryParams.Graphics))
+            if (queryParams.Graphics != null)
             {
-                laptops = laptops.Where(l => l.GraphicsCard.ToLower().StartsWith(queryParams.Graphics.Trim().ToLower())).ToList();
+                var col = new List<Laptop>();
+                foreach (var graphics in queryParams.Graphics)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.GraphicsCard.ToLower().Equals(graphics.Trim().ToLower()))
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (queryParams.RAM != 0)
+            if (queryParams.RAM != null)
             {
-                laptops = laptops.Where(l => l.RAMCapacity == queryParams.RAM).ToList();
+                var col = new List<Laptop>();
+                foreach (var ram in queryParams.RAM)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.RAMCapacity == ram)
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (queryParams.SSD != 0)
+            if (queryParams.SSD != null)
             {
-                laptops = laptops.Where(l => l.SSDCapacity == queryParams.SSD).ToList();
+                var col = new List<Laptop>();
+                foreach (var ssd in queryParams.SSD)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.SSDCapacity == ssd)
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (queryParams.Screen != 0)
+            if (queryParams.Screen != null)
             {
-                laptops = laptops.Where(l => l.ScreenSize == queryParams.Screen).ToList();
+                var col = new List<Laptop>();
+                foreach (var screen in queryParams.Screen)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.ScreenSize == screen)
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
-            if (!string.IsNullOrEmpty(queryParams.OS))
+            if (queryParams.OS != null)
             {
-                laptops = laptops.Where(l => l.OS.ToLower().StartsWith(queryParams.OS.Trim().ToLower())).ToList();
+                var col = new List<Laptop>();
+                foreach (var os in queryParams.OS)
+                {
+                    foreach (var laptop in laptops)
+                    {
+                        if (laptop.OS.ToLower().Equals(os.Trim().ToLower()))
+                        {
+                            col.Add(laptop);
+                        }
+                    }
+                }
+                laptops = col;
             }
             if (queryParams.MinWeight <= queryParams.MaxWeight && queryParams.MaxWeight != 0)
             {
@@ -206,6 +310,105 @@ namespace Webox.BLL.Services
 
             await unitOfWork.Laptops.Update(entity);
             await unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<List<string>> GetModelNameList(string name)
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            var names = new List<string>();
+            var nameCriterion = name.ToLower();
+            var criteria = nameCriterion.Split(' ');
+            var cleanCriteria = new List<string>();
+            foreach (var criterion in criteria)
+            {
+                if (!string.IsNullOrEmpty(criterion))
+                {
+                    cleanCriteria.Add(criterion);
+                }
+            }
+            int counter;
+            foreach (var laptop in laptops)
+            {
+                counter = 0;
+                foreach (var criterion in cleanCriteria)
+                {
+                    if (laptop.ModelName.ToLower().Contains(criterion))
+                    {
+                        counter++;
+                    }
+                }
+                if (counter == cleanCriteria.Count)
+                {
+                    names.Add(laptop.ModelName);
+                }
+            }
+            return names;
+        }
+
+        public async Task<List<string>> GetManufacturers()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.Manufacturer).Distinct().ToList();
+        }
+
+        public async Task<List<string>> GetProcessors()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.Processor).Distinct().ToList();
+        }
+
+        public async Task<List<string>> GetGraphics()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.GraphicsCard).Distinct().ToList();
+        }
+
+        public async Task<List<int>> GetRAM()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.RAMCapacity).Distinct().ToList();
+        }
+
+        public async Task<List<int>> GetSSD()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.SSDCapacity).Distinct().ToList();
+        }
+
+        public async Task<List<float>> GetScreens()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.ScreenSize).Distinct().ToList();
+        }
+
+        public async Task<List<string>> GetOS()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Select(l => l.OS).Distinct().ToList();
+        }
+
+        public async Task<float> GetMinWeight()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Min(l => l.Weight);
+        }
+
+        public async Task<float> GetMaxWeight()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Max(l => l.Weight);
+        }
+
+        public async Task<float> GetMinPrice()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Min(l => l.Price);
+        }
+
+        public async Task<float> GetMaxPrice()
+        {
+            var laptops = await unitOfWork.Laptops.GetAll();
+            return laptops.Max(l => l.Price);
         }
     }
 }
